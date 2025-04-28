@@ -5,6 +5,7 @@ import { UserModule } from "./user/user.module";
 import { MongooseModule } from "@nestjs/mongoose";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { envSchema } from "./validations/env.validation";
+import { AuthModule } from "./auth/auth.module";
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { envSchema } from "./validations/env.validation";
         uri: configService.get<string>("MONGODB_URI"),
       }),
     }),
+    AuthModule,
     UserModule,
   ],
   controllers: [AppController],

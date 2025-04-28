@@ -1,9 +1,11 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Post, UseGuards } from "@nestjs/common";
+import { AuthGuard } from "src/auth/auth.guard";
 import { ZodValidationPipe } from "src/pipes/zod-validation.pipe";
 import { CreateUserDto, createUserSchema } from "./dto/create-user.dto";
 import { UserService } from "./user.service";
 
 @Controller("user")
+@UseGuards(AuthGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

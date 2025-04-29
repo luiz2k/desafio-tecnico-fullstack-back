@@ -1,11 +1,12 @@
 import { Module } from "@nestjs/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { MongooseModule } from "@nestjs/mongoose";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { UserModule } from "./user/user.module";
-import { MongooseModule } from "@nestjs/mongoose";
-import { ConfigModule, ConfigService } from "@nestjs/config";
-import { envSchema } from "./validations/env.validation";
 import { AuthModule } from "./auth/auth.module";
+import { InfluencerModule } from "./influencer/influencer.module";
+import { UserModule } from "./user/user.module";
+import { envSchema } from "./validations/env.validation";
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AuthModule } from "./auth/auth.module";
     }),
     AuthModule,
     UserModule,
+    InfluencerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

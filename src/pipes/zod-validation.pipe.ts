@@ -17,7 +17,7 @@ export class ZodValidationPipe implements PipeTransform {
           message: "Erro na validação dos dados",
           data: {
             type: metadata.type,
-            errors: error.flatten().fieldErrors,
+            errors: error.issues,
           },
         });
       }

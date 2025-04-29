@@ -6,7 +6,11 @@ export const createUserSchema = z.object({
   password: z
     .string()
     .min(6, { message: "Senha muito curta, mínimo 6 caracteres" }),
-  role: z.nativeEnum(UserRole, { message: "Papel inválido" }),
+  roles: z
+    .array(z.nativeEnum(UserRole, { message: "Papel inválido" }), {
+      message: "Esperado um array de papeis",
+    })
+    .min(1, { message: "Pelo menos um papel deve ser atribuído" }),
 });
 
 export type CreateUserDto = z.infer<typeof createUserSchema>;

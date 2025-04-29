@@ -16,8 +16,8 @@ export class User {
   @Prop({ required: true, select: false })
   hashPassword: string;
 
-  @Prop({ required: true, enum: UserRole })
-  role: UserRole;
+  @Prop({ required: true, type: [String], enum: UserRole })
+  roles: UserRole[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

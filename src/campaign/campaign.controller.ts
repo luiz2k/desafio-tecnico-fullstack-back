@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "src/auth/auth.guard";
 import { Roles } from "src/auth/roles.decorator";
 import { RolesGuard } from "src/auth/roles.guard";
@@ -9,6 +9,7 @@ import {
   CreateCampaignDto,
   createCampaignSchema,
 } from "./dto/create-campaign.dto";
+import { objectIdSchema } from "src/validations/object-id.validation";
 
 @UseGuards(RolesGuard)
 @Roles(UserRole.ADMIN)
@@ -29,5 +30,11 @@ export class CampaignController {
   @Roles(UserRole.EDITOR)
   findAll() {
     return this.campaignService.findAll();
+  }
+
+  @Get(":id")
+  @Roles(UserRole.EDITOR)
+  findOne(@Param("id", new ZodValidationPipe(objectIdSchema)) id: string) {
+    return this.campaignService.findOne(id);
   }
 }

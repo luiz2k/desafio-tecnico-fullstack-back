@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from "@nestjs/common";
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Campaign } from "src/schemas/campaign.schema";
@@ -29,6 +33,19 @@ export class CampaignService {
     return {
       message: "Campanhas encontradas com sucesso",
       data: await this.campaignModel.find(),
+    };
+  }
+
+  async findOne(id: string) {
+    const campaignExists = await this.campaignModel.findOne({ _id: id });
+
+    if (!campaignExists) {
+      throw new NotFoundException("Campanha não encontrada");
+    }
+
+    return {
+      message: "Campanha encontrada com sucesso",
+      data: campaignExists,
     };
   }
 }

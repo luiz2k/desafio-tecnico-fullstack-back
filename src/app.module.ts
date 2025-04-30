@@ -7,6 +7,7 @@ import { AuthModule } from "./auth/auth.module";
 import { InfluencerModule } from "./influencer/influencer.module";
 import { UserModule } from "./user/user.module";
 import { envSchema } from "./validations/env.validation";
+import { CampaignModule } from "./campaign/campaign.module";
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { envSchema } from "./validations/env.validation";
     AuthModule,
     UserModule,
     InfluencerModule,
+    CampaignModule,
   ],
   controllers: [AppController],
   providers: [AppService],

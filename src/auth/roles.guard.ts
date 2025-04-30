@@ -14,14 +14,20 @@ export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const requiredRoles = this.reflector.getAllAndOverride<string[]>(
+    const classRoles = this.reflector.getAllAndOverride<UserRole[]>(ROLES_KEY, [
+      context.getClass(),
+    ]);
+
+    const methodRoles = this.reflector.getAllAndOverride<UserRole[]>(
       ROLES_KEY,
-      [context.getHandler(), context.getClass()],
+      [context.getHandler()],
     );
 
-    if (!requiredRoles) {
+    if (!classRoles && !methodRoles) {
       return true;
     }
+
+    const roles = [...(classRoles || []), ...(methodRoles || [])];
 
     const request = context
       .switchToHttp()
@@ -29,9 +35,7 @@ export class RolesGuard implements CanActivate {
 
     const user = request.user;
 
-    const hasRole = requiredRoles.some((role: UserRole) =>
-      user?.roles?.includes(role),
-    );
+    const hasRole = roles.some((role) => user?.roles?.includes(role));
 
     if (!hasRole) {
       throw new UnauthorizedException("Acesso negado");

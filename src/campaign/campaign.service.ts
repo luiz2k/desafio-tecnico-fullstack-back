@@ -7,6 +7,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Campaign } from "src/schemas/campaign.schema";
 import { CreateCampaignDto } from "./dto/create-campaign.dto";
+import { UpdateCampaignDto } from "./dto/update-campaign.dto";
 
 @Injectable()
 export class CampaignService {
@@ -46,6 +47,21 @@ export class CampaignService {
     return {
       message: "Campanha encontrada com sucesso",
       data: campaignExists,
+    };
+  }
+
+  async update(id: string, updateCampaignDto: UpdateCampaignDto) {
+    const campaignExists = await this.campaignModel.findOne({ _id: id });
+
+    if (!campaignExists) {
+      throw new NotFoundException("Campanha não encontrada");
+    }
+
+    await this.campaignModel.updateOne({ _id: id }, updateCampaignDto);
+
+    return {
+      message: "Campanha atualizada com sucesso",
+      data: await this.campaignModel.findOne({ _id: id }),
     };
   }
 

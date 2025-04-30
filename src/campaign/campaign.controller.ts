@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   UseGuards,
 } from "@nestjs/common";
@@ -18,6 +19,7 @@ import {
   createCampaignSchema,
 } from "./dto/create-campaign.dto";
 import { objectIdSchema } from "src/validations/object-id.validation";
+import { UpdateCampaignDto } from "./dto/update-campaign.dto";
 
 @UseGuards(RolesGuard)
 @Roles(UserRole.ADMIN)
@@ -44,6 +46,14 @@ export class CampaignController {
   @Roles(UserRole.EDITOR)
   findOne(@Param("id", new ZodValidationPipe(objectIdSchema)) id: string) {
     return this.campaignService.findOne(id);
+  }
+
+  @Patch(":id")
+  update(
+    @Param("id", new ZodValidationPipe(objectIdSchema)) id: string,
+    @Body() updateCampaignDto: UpdateCampaignDto,
+  ) {
+    return this.campaignService.update(id, updateCampaignDto);
   }
 
   @Delete(":id")

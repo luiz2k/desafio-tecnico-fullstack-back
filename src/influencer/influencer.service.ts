@@ -1,8 +1,13 @@
-import { ConflictException, Injectable } from "@nestjs/common";
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Influencer } from "src/schemas/influencer.schema";
 import { CreateInfluencerDto } from "./dto/create-influencer.dto";
+import { UpdateInfluencerDto } from "./dto/update-influencer.dto";
 
 @Injectable()
 export class InfluencerService {
@@ -21,5 +26,30 @@ export class InfluencerService {
     }
 
     return await this.influencerModel.create(createInfluencerDto);
+  }
+
+  async update(id: string, updateInfluencerDto: UpdateInfluencerDto) {
+    const influencerExists = await this.influencerModel.findOne({
+      _id: id,
+    });
+
+    if (!influencerExists) {
+      throw new NotFoundException("Influenciador não encontrado");
+    }
+
+    const socialNetworkExists = await this.influencerModel.findOne({
+      social_network: updateInfluencerDto.social_network,
+    });
+
+    if (socialNetworkExists) {
+      throw new ConflictException("social_network já cadastrada");
+    }
+
+    await this.influencerModel.updateOne({ _id: id }, updateInfluencerDto);
+
+    return {
+      message: "Influenciador atualizado com sucesso",
+      data: await this.influencerModel.findOne({ _id: id }),
+    };
   }
 }

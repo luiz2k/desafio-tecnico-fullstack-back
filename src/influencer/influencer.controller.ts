@@ -1,13 +1,25 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from "@nestjs/common";
 import { AuthGuard } from "src/auth/auth.guard";
 import { Roles } from "src/auth/roles.decorator";
 import { RolesGuard } from "src/auth/roles.guard";
 import { ZodValidationPipe } from "src/pipes/zod-validation.pipe";
 import { UserRole } from "src/schemas/user.schema";
+import { objectIdSchema } from "../validations/object-id.validation";
 import {
   CreateInfluencerDto,
   createInfluencerSchema,
 } from "./dto/create-influencer.dto";
+import {
+  UpdateInfluencerDto,
+  updateInfluencerSchema,
+} from "./dto/update-influencer.dto";
 import { InfluencerService } from "./influencer.service";
 
 @Controller("influencer")
@@ -23,5 +35,17 @@ export class InfluencerController {
     createInfluencerDto: CreateInfluencerDto,
   ) {
     return this.influencerService.create(createInfluencerDto);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.ADMIN, UserRole.EDITOR)
+  @UseGuards(AuthGuard)
+  @Patch(":id")
+  update(
+    @Param("id", new ZodValidationPipe(objectIdSchema)) id: string,
+    @Body(new ZodValidationPipe(updateInfluencerSchema))
+    updateInfluencerDto: UpdateInfluencerDto,
+  ) {
+    return this.influencerService.update(id, updateInfluencerDto);
   }
 }

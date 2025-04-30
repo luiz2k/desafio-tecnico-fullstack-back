@@ -24,4 +24,11 @@ export class CampaignService {
       data: await this.campaignModel.create(createCampaignDto),
     };
   }
+
+  async findAll() {
+    return {
+      message: "Campanhas encontradas com sucesso",
+      data: await this.campaignModel.find(),
+    };
+  }
 }

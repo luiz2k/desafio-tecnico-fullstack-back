@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "src/auth/auth.guard";
 import { Roles } from "src/auth/roles.decorator";
 import { RolesGuard } from "src/auth/roles.guard";
@@ -23,5 +23,11 @@ export class CampaignController {
     createCampaignDto: CreateCampaignDto,
   ) {
     return this.campaignService.create(createCampaignDto);
+  }
+
+  @Get()
+  @Roles(UserRole.EDITOR)
+  findAll() {
+    return this.campaignService.findAll();
   }
 }

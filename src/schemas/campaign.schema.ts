@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose, { HydratedDocument } from "mongoose";
-import { Influencer } from "./influencer.schema";
+import { HydratedDocument } from "mongoose";
 
 export type CampaignDocument = HydratedDocument<Campaign>;
 
@@ -11,7 +10,7 @@ export enum CampaignStatus {
 
 @Schema({ timestamps: true })
 export class Campaign {
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   title: string;
 
   @Prop({ required: true })
@@ -32,9 +31,6 @@ export class Campaign {
     default: CampaignStatus.OPENING,
   })
   status: CampaignStatus;
-
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Influencer" }] })
-  influencers: Influencer[];
 }
 
 export const CampaignSchema = SchemaFactory.createForClass(Campaign);

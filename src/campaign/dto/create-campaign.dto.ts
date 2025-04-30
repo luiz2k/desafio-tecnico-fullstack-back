@@ -18,10 +18,12 @@ export const createCampaignSchema = z.object({
     required_error: "Status obrigatório",
     invalid_type_error: "O status deve ser um valor válido",
   }),
-  influencers: z.array(objectIdSchema, {
-    required_error: "Influenciadores obrigatórios",
-    invalid_type_error: "Os influenciadores devem ser um array de ObjectIds",
-  }),
+  influencers: z
+    .array(objectIdSchema, {
+      required_error: "Influenciadores obrigatórios",
+      invalid_type_error: "Os influenciadores devem ser um array de ObjectIds",
+    })
+    .optional(),
 });
 
 export type CreateCampaignDto = z.infer<typeof createCampaignSchema>;

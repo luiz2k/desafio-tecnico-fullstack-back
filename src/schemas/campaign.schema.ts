@@ -33,10 +33,7 @@ export class Campaign {
   })
   status: CampaignStatus;
 
-  @Prop({
-    required: true,
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Influencer" }],
-  })
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Influencer" }] })
   influencers: Influencer[];
 }
 

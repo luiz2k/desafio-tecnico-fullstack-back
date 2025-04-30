@@ -40,10 +40,7 @@ export class AuthService {
     };
 
     return {
-      message: "Autenticado com sucesso",
-      data: {
-        access_token: this.jwtService.sign(payload),
-      },
+      access_token: this.jwtService.sign(payload),
     };
   }
 }

@@ -20,12 +20,12 @@ export class UserService {
 
     const hash = await bcrypt.hash(createUserDto.password, 10);
 
-    const { _id, email, roles } = await this.userModel.create({
+    const { _id } = await this.userModel.create({
       email: createUserDto.email,
       hashPassword: hash,
       roles: createUserDto.roles,
     });
 
-    return { _id, email, roles };
+    return await this.userModel.findOne({ _id });
   }
 }

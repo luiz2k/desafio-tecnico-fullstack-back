@@ -27,13 +27,7 @@ export class InfluencerService {
       throw new ConflictException("Influencer já cadastrado");
     }
 
-    const newInfluencer =
-      await this.influencerModel.create(createInfluencerDto);
-
-    return {
-      message: "Influenciador cadastrado com sucesso",
-      data: newInfluencer,
-    };
+    return await this.influencerModel.create(createInfluencerDto);
   }
 
   async findAll() {
@@ -59,10 +53,7 @@ export class InfluencerService {
 
     await this.influencerModel.updateOne({ _id: id }, updateInfluencerDto);
 
-    return {
-      message: "Influenciador atualizado com sucesso",
-      data: await this.influencerModel.findOne({ _id: id }),
-    };
+    return await this.influencerModel.findOne({ _id: id });
   }
 
   async delete(id: string) {
@@ -79,9 +70,6 @@ export class InfluencerService {
       { $pull: { influencers: id } },
     );
 
-    return {
-      message: "Influenciador excluído com sucesso",
-      data: await this.influencerModel.deleteOne({ _id: id }),
-    };
+    return await this.influencerModel.deleteOne({ _id: id });
   }
 }

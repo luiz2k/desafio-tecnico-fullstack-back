@@ -15,9 +15,14 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  create(
+  async create(
     @Body(new ZodValidationPipe(createUserSchema)) createUserDto: CreateUserDto,
   ) {
-    return this.userService.create(createUserDto);
+    const newUser = await this.userService.create(createUserDto);
+
+    return {
+      message: "Usuário cadastrado com sucesso",
+      data: newUser,
+    };
   }
 }

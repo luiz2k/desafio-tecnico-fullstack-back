@@ -24,17 +24,11 @@ export class CampaignService {
       throw new ConflictException("Já existe uma campanha com esse título");
     }
 
-    return {
-      message: "Camapanha criada com sucesso",
-      data: await this.campaignModel.create(createCampaignDto),
-    };
+    return await this.campaignModel.create(createCampaignDto);
   }
 
   async findAll() {
-    return {
-      message: "Busca de campanhas realizada com sucesso",
-      data: await this.campaignModel.find(),
-    };
+    return await this.campaignModel.find();
   }
 
   async findOne(id: string) {
@@ -44,10 +38,7 @@ export class CampaignService {
       throw new NotFoundException("Campanha não encontrada");
     }
 
-    return {
-      message: "Campanha encontrada com sucesso",
-      data: campaignExists,
-    };
+    return campaignExists;
   }
 
   async update(id: string, updateCampaignDto: UpdateCampaignDto) {
@@ -59,10 +50,7 @@ export class CampaignService {
 
     await this.campaignModel.updateOne({ _id: id }, updateCampaignDto);
 
-    return {
-      message: "Campanha atualizada com sucesso",
-      data: await this.campaignModel.findOne({ _id: id }),
-    };
+    return await this.campaignModel.findOne({ _id: id });
   }
 
   async delete(id: string) {
@@ -72,9 +60,6 @@ export class CampaignService {
       throw new NotFoundException("Campanha não encontrada");
     }
 
-    return {
-      message: "Campanha excluida com sucesso",
-      data: await this.campaignModel.deleteOne({ _id: id }),
-    };
+    return await this.campaignModel.deleteOne({ _id: id });
   }
 }

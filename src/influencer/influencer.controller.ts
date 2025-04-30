@@ -32,31 +32,55 @@ export class InfluencerController {
   constructor(private readonly influencerService: InfluencerService) {}
 
   @Post()
-  create(
+  async create(
     @Body(new ZodValidationPipe(createInfluencerSchema))
     createInfluencerDto: CreateInfluencerDto,
   ) {
-    return this.influencerService.create(createInfluencerDto);
+    const newInfluencer =
+      await this.influencerService.create(createInfluencerDto);
+
+    return {
+      message: "Influenciador cadastrado com sucesso",
+      data: newInfluencer,
+    };
   }
 
   @Roles(UserRole.EDITOR)
   @Get()
-  findAll() {
-    return this.influencerService.findAll();
+  async findAll() {
+    const influencers = await this.influencerService.findAll();
+
+    return {
+      message: "Busca de influenciadores realizada com sucesso",
+      data: influencers,
+    };
   }
 
   @Roles(UserRole.EDITOR)
   @Patch(":id")
-  update(
+  async update(
     @Param("id", new ZodValidationPipe(objectIdSchema)) id: string,
     @Body(new ZodValidationPipe(updateInfluencerSchema))
     updateInfluencerDto: UpdateInfluencerDto,
   ) {
-    return this.influencerService.update(id, updateInfluencerDto);
+    const influencerUpdated = await this.influencerService.update(
+      id,
+      updateInfluencerDto,
+    );
+
+    return {
+      message: "Influenciador atualizado com sucesso",
+      data: influencerUpdated,
+    };
   }
 
   @Delete(":id")
-  delete(@Param("id", new ZodValidationPipe(objectIdSchema)) id: string) {
-    return this.influencerService.delete(id);
+  async delete(@Param("id", new ZodValidationPipe(objectIdSchema)) id: string) {
+    const influencerDeleted = await this.influencerService.delete(id);
+
+    return {
+      message: "Influenciador excluído com sucesso",
+      data: influencerDeleted,
+    };
   }
 }

@@ -8,7 +8,12 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post("sign-in")
-  signIn(@Body(new ZodValidationPipe(signInDto)) signInDto: SignInDto) {
-    return this.authService.signIn(signInDto);
+  async signIn(@Body(new ZodValidationPipe(signInDto)) signInDto: SignInDto) {
+    const token = await this.authService.signIn(signInDto);
+
+    return {
+      message: "Autenticado com sucesso",
+      data: token,
+    };
   }
 }

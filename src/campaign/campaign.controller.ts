@@ -29,35 +29,65 @@ export class CampaignController {
   constructor(private readonly campaignService: CampaignService) {}
 
   @Post()
-  create(
+  async create(
     @Body(new ZodValidationPipe(createCampaignSchema))
     createCampaignDto: CreateCampaignDto,
   ) {
-    return this.campaignService.create(createCampaignDto);
+    const newCampaign = await this.campaignService.create(createCampaignDto);
+
+    return {
+      message: "Camapanha criada com sucesso",
+      data: newCampaign,
+    };
   }
 
   @Get()
   @Roles(UserRole.EDITOR)
-  findAll() {
-    return this.campaignService.findAll();
+  async findAll() {
+    const campaigns = await this.campaignService.findAll();
+
+    return {
+      message: "Busca de campanhas realizada com sucesso",
+      data: campaigns,
+    };
   }
 
   @Get(":id")
   @Roles(UserRole.EDITOR)
-  findOne(@Param("id", new ZodValidationPipe(objectIdSchema)) id: string) {
-    return this.campaignService.findOne(id);
+  async findOne(
+    @Param("id", new ZodValidationPipe(objectIdSchema)) id: string,
+  ) {
+    const campaign = await this.campaignService.findOne(id);
+
+    return {
+      message: "Campanha encontrada com sucesso",
+      data: campaign,
+    };
   }
 
   @Patch(":id")
-  update(
+  async update(
     @Param("id", new ZodValidationPipe(objectIdSchema)) id: string,
     @Body() updateCampaignDto: UpdateCampaignDto,
   ) {
-    return this.campaignService.update(id, updateCampaignDto);
+    const campaignUpdated = await this.campaignService.update(
+      id,
+      updateCampaignDto,
+    );
+
+    return {
+      message: "Campanha atualizada com sucesso",
+      data: campaignUpdated,
+    };
   }
 
   @Delete(":id")
-  delete(@Param("id", new ZodValidationPipe(objectIdSchema)) id: string) {
-    return this.campaignService.delete(id);
+  async delete(@Param("id", new ZodValidationPipe(objectIdSchema)) id: string) {
+    const campaignDeleted = await this.campaignService.delete(id);
+
+    return {
+      message: "Campanha excluida com sucesso",
+      data: campaignDeleted,
+    };
   }
 }

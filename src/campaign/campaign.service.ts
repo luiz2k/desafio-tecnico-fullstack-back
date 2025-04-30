@@ -48,4 +48,17 @@ export class CampaignService {
       data: campaignExists,
     };
   }
+
+  async delete(id: string) {
+    const campaignExists = await this.campaignModel.findOne({ _id: id });
+
+    if (!campaignExists) {
+      throw new NotFoundException("Campanha não encontrada");
+    }
+
+    return {
+      message: "Campanha excluida com sucesso",
+      data: await this.campaignModel.deleteOne({ _id: id }),
+    };
+  }
 }

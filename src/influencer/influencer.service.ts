@@ -25,7 +25,13 @@ export class InfluencerService {
       throw new ConflictException("Influencer já cadastrado");
     }
 
-    return await this.influencerModel.create(createInfluencerDto);
+    const newInfluencer =
+      await this.influencerModel.create(createInfluencerDto);
+
+    return {
+      message: "Influenciador cadastrado com sucesso",
+      data: newInfluencer,
+    };
   }
 
   async update(id: string, updateInfluencerDto: UpdateInfluencerDto) {

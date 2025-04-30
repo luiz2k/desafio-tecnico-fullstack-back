@@ -23,13 +23,13 @@ import {
 } from "./dto/update-influencer.dto";
 import { InfluencerService } from "./influencer.service";
 
+@UseGuards(RolesGuard)
+@Roles(UserRole.ADMIN)
+@UseGuards(AuthGuard)
 @Controller("influencer")
 export class InfluencerController {
   constructor(private readonly influencerService: InfluencerService) {}
 
-  @UseGuards(RolesGuard)
-  @Roles(UserRole.ADMIN)
-  @UseGuards(AuthGuard)
   @Post()
   create(
     @Body(new ZodValidationPipe(createInfluencerSchema))
@@ -38,17 +38,13 @@ export class InfluencerController {
     return this.influencerService.create(createInfluencerDto);
   }
 
-  @UseGuards(RolesGuard)
-  @Roles(UserRole.ADMIN, UserRole.EDITOR)
-  @UseGuards(AuthGuard)
+  @Roles(UserRole.EDITOR)
   @Get()
   findAll() {
     return this.influencerService.findAll();
   }
 
-  @UseGuards(RolesGuard)
-  @Roles(UserRole.ADMIN, UserRole.EDITOR)
-  @UseGuards(AuthGuard)
+  @Roles(UserRole.EDITOR)
   @Patch(":id")
   update(
     @Param("id", new ZodValidationPipe(objectIdSchema)) id: string,

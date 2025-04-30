@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -52,5 +53,10 @@ export class InfluencerController {
     updateInfluencerDto: UpdateInfluencerDto,
   ) {
     return this.influencerService.update(id, updateInfluencerDto);
+  }
+
+  @Delete(":id")
+  delete(@Param("id", new ZodValidationPipe(objectIdSchema)) id: string) {
+    return this.influencerService.delete(id);
   }
 }

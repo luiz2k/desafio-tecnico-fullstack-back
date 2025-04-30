@@ -31,7 +31,7 @@ export class CampaignService {
 
   async findAll() {
     return {
-      message: "Campanhas encontradas com sucesso",
+      message: "Busca de campanhas realizada com sucesso",
       data: await this.campaignModel.find(),
     };
   }

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Param,
   Patch,
   Post,
@@ -35,6 +36,14 @@ export class InfluencerController {
     createInfluencerDto: CreateInfluencerDto,
   ) {
     return this.influencerService.create(createInfluencerDto);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.ADMIN, UserRole.EDITOR)
+  @UseGuards(AuthGuard)
+  @Get()
+  findAll() {
+    return this.influencerService.findAll();
   }
 
   @UseGuards(RolesGuard)

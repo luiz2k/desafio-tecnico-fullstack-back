@@ -34,6 +34,10 @@ export class InfluencerService {
     };
   }
 
+  async findAll() {
+    return await this.influencerModel.find();
+  }
+
   async update(id: string, updateInfluencerDto: UpdateInfluencerDto) {
     const influencerExists = await this.influencerModel.findOne({
       _id: id,

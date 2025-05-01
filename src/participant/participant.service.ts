@@ -21,4 +21,8 @@ export class ParticipantService {
 
     return await this.participantModel.create(createParticipantDto);
   }
+
+  async findAll() {
+    return await this.participantModel.find();
+  }
 }

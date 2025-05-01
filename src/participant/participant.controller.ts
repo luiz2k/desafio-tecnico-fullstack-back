@@ -29,4 +29,14 @@ export class ParticipantController {
       data: newParticipant,
     };
   }
+
+  @Roles(UserRole.EDITOR)
+  async findAll() {
+    const participants = await this.participantService.findAll();
+
+    return {
+      message: "Busca de participantes realizada com sucesso",
+      data: participants,
+    };
+  }
 }

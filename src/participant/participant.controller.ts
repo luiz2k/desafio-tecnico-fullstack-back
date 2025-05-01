@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Param,
   Patch,
   Post,
@@ -67,6 +68,16 @@ export class ParticipantController {
     return {
       message: "Participante atualizado com sucesso",
       data: participantUpdated,
+    };
+  }
+
+  @Delete(":id")
+  async delete(@Param("id", new ZodValidationPipe(objectIdSchema)) id: string) {
+    const participantDeleted = await this.participantService.delete(id);
+
+    return {
+      message: "Participante excluido com sucesso",
+      data: participantDeleted,
     };
   }
 }

@@ -38,4 +38,14 @@ export class ParticipantService {
 
     return this.participantModel.findOne({ _id: id });
   }
+
+  async delete(id: string) {
+    const participantExists = await this.participantModel.findOne({ _id: id });
+
+    if (!participantExists) {
+      throw new ConflictException("Participante não encontrado");
+    }
+
+    return await this.participantModel.deleteOne({ _id: id });
+  }
 }

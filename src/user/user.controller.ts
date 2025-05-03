@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "src/auth/auth.guard";
 import { Roles } from "src/auth/roles.decorator";
 import { RolesGuard } from "src/auth/roles.guard";
@@ -23,6 +23,17 @@ export class UserController {
     return {
       message: "Usuário cadastrado com sucesso",
       data: newUser,
+    };
+  }
+
+  @Roles(UserRole.EDITOR)
+  @Get()
+  async findAll() {
+    const users = await this.userService.findAll();
+
+    return {
+      message: "Busca de usuários realizada com sucesso",
+      data: users,
     };
   }
 }

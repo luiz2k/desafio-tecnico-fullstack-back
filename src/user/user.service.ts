@@ -28,4 +28,8 @@ export class UserService {
 
     return await this.userModel.findOne({ _id });
   }
+
+  async findAll() {
+    return await this.userModel.find();
+  }
 }

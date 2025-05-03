@@ -32,4 +32,24 @@ export class UserService {
   async findAll() {
     return await this.userModel.find();
   }
+
+  async delete(id: string, userId: string) {
+    if (id === userId) {
+      throw new ConflictException("Não é possível excluir a própria conta");
+    }
+
+    const adminUsers = await this.userModel.find({ roles: "admin" });
+
+    if (adminUsers.length === 1) {
+      throw new ConflictException("Deve existir pelo menos um admin");
+    }
+
+    const userExists = await this.userModel.find({ _id: id });
+
+    if (userExists.length === 0) {
+      throw new ConflictException("Usuário não encontrado");
+    }
+
+    return await this.userModel.deleteOne({ _id: id });
+  }
 }

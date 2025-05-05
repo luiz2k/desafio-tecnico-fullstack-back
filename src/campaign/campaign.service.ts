@@ -6,25 +6,56 @@ import {
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Campaign } from "src/schemas/campaign.schema";
-import { CreateCampaignDto } from "./dto/create-campaign.dto";
+import { Influencer } from "src/schemas/influencer.schema";
+import { Participant } from "src/schemas/participant.schema";
+import { CreateCampaignParticipantDto } from "./dto/create-campaign.dto";
 import { UpdateCampaignDto } from "./dto/update-campaign.dto";
 
 @Injectable()
 export class CampaignService {
   constructor(
     @InjectModel(Campaign.name) private readonly campaignModel: Model<Campaign>,
+    @InjectModel(Participant.name)
+    private readonly participantModel: Model<Participant>,
+    @InjectModel(Influencer.name)
+    private readonly influencerModel: Model<Influencer>,
   ) {}
 
-  async create(createCampaignDto: CreateCampaignDto) {
+  async create(createCampaignParticipant: CreateCampaignParticipantDto) {
     const campaignExists = await this.campaignModel.findOne({
-      title: createCampaignDto.title,
+      title: createCampaignParticipant.campaign.title,
     });
 
     if (campaignExists) {
       throw new ConflictException("Já existe uma campanha com esse título");
     }
 
-    return await this.campaignModel.create(createCampaignDto);
+    const createdCampaign = await this.campaignModel.create(
+      createCampaignParticipant,
+    );
+
+    // Remove os influenciadores duplicados
+    const influencersWithoutDuplicates = new Set(
+      createCampaignParticipant.participants,
+    );
+
+    // Se a lista de participantes existir, insira eles na campanha criada
+    if (createCampaignParticipant.participants) {
+      for (const participant of influencersWithoutDuplicates) {
+        const influencerExists = await this.influencerModel.findOne({
+          _id: participant,
+        });
+
+        if (influencerExists) {
+          await this.participantModel.create({
+            campaign: createdCampaign._id,
+            influencer: participant,
+          });
+        }
+      }
+    }
+
+    return createdCampaign;
   }
 
   async findAll() {

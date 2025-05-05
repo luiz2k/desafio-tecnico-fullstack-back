@@ -13,12 +13,12 @@ import { Roles } from "src/auth/roles.decorator";
 import { RolesGuard } from "src/auth/roles.guard";
 import { ZodValidationPipe } from "src/pipes/zod-validation.pipe";
 import { UserRole } from "src/schemas/user.schema";
+import { objectIdSchema } from "src/validations/object-id.validation";
 import { CampaignService } from "./campaign.service";
 import {
-  CreateCampaignDto,
-  createCampaignSchema,
+  CreateCampaignParticipantDto,
+  createCampaignParticipantSchema,
 } from "./dto/create-campaign.dto";
-import { objectIdSchema } from "src/validations/object-id.validation";
 import { UpdateCampaignDto } from "./dto/update-campaign.dto";
 
 @UseGuards(RolesGuard)
@@ -30,10 +30,12 @@ export class CampaignController {
 
   @Post()
   async create(
-    @Body(new ZodValidationPipe(createCampaignSchema))
-    createCampaignDto: CreateCampaignDto,
+    @Body(new ZodValidationPipe(createCampaignParticipantSchema))
+    createCampaignParticipant: CreateCampaignParticipantDto,
   ) {
-    const newCampaign = await this.campaignService.create(createCampaignDto);
+    const newCampaign = await this.campaignService.create(
+      createCampaignParticipant,
+    );
 
     return {
       message: "Camapanha criada com sucesso",

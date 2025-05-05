@@ -1,4 +1,5 @@
 import { CampaignStatus } from "src/schemas/campaign.schema";
+import { objectIdSchema } from "src/validations/object-id.validation";
 import { z } from "zod";
 
 export const createCampaignSchema = z.object({
@@ -22,3 +23,16 @@ export const createCampaignSchema = z.object({
 });
 
 export type CreateCampaignDto = z.infer<typeof createCampaignSchema>;
+
+export const createCampaignParticipantSchema = z.object({
+  campaign: createCampaignSchema,
+  participants: z
+    .array(objectIdSchema, {
+      invalid_type_error: "A lista de participantes deve ser um array",
+    })
+    .optional(),
+});
+
+export type CreateCampaignParticipantDto = z.infer<
+  typeof createCampaignParticipantSchema
+>;

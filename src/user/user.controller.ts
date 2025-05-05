@@ -55,8 +55,6 @@ export class UserController {
   ) {
     const userId = req.user.sub;
 
-    console.log(userId);
-
     const userDeleted = await this.userService.delete(id, userId);
 
     return {

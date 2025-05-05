@@ -1,4 +1,4 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Prop, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument } from "mongoose";
 
 export type CampaignDocument = HydratedDocument<Campaign>;
@@ -8,7 +8,6 @@ export enum CampaignStatus {
   CLOSED = "closed",
 }
 
-@Schema({ timestamps: true })
 export class Campaign {
   @Prop({ required: true, unique: true })
   title: string;
@@ -17,13 +16,10 @@ export class Campaign {
   customer: string;
 
   @Prop()
-  createdAt: Date;
+  startedAt: Date;
 
   @Prop()
-  updatedAt: Date;
-
-  @Prop({ default: null })
-  finishedAt?: Date;
+  finishedAt: Date;
 
   @Prop({
     required: true,

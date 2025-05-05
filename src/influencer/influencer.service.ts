@@ -43,15 +43,33 @@ export class InfluencerService {
       throw new NotFoundException("Influenciador não encontrado");
     }
 
-    const socialNetworkExists = await this.influencerModel.findOne({
-      social_network: updateInfluencerDto.social_network,
-    });
+    // Verifica quais registros do influenciador devem ser atualizados
+    const updatePayload: UpdateInfluencerDto = {};
 
-    if (socialNetworkExists) {
-      throw new ConflictException("social_network já cadastrada");
+    for (const key of Object.keys(updateInfluencerDto)) {
+      const oldValue = influencerExists[key] as string | number | undefined;
+      const newValue = updateInfluencerDto[key] as string | number | undefined;
+
+      if (newValue !== undefined && newValue !== oldValue) {
+        updatePayload[key] = newValue;
+      }
     }
 
-    await this.influencerModel.updateOne({ _id: id }, updateInfluencerDto);
+    if (Object.keys(updatePayload).length === 0) {
+      throw new ConflictException("Pelo menos um campo deve ser atualizado");
+    }
+
+    if (updatePayload.social_network) {
+      const socialNetworkExists = await this.influencerModel.findOne({
+        social_network: updatePayload.social_network,
+      });
+
+      if (socialNetworkExists) {
+        throw new ConflictException("Rede social informada já está cadastrada");
+      }
+    }
+
+    await this.influencerModel.updateOne({ _id: id }, updatePayload);
 
     return await this.influencerModel.findOne({ _id: id });
   }

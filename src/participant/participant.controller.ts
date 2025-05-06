@@ -44,6 +44,7 @@ export class ParticipantController {
   }
 
   @Roles(UserRole.EDITOR)
+  @Get()
   async findAll() {
     const participants = await this.participantService.findAll();
 

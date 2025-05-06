@@ -1,4 +1,4 @@
-import { Prop, SchemaFactory } from "@nestjs/mongoose";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument } from "mongoose";
 
 export type CampaignDocument = HydratedDocument<Campaign>;
@@ -8,6 +8,7 @@ export enum CampaignStatus {
   CLOSED = "closed",
 }
 
+@Schema()
 export class Campaign {
   @Prop({ required: true, unique: true })
   title: string;

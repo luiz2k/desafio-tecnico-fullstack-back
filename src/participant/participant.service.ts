@@ -53,13 +53,19 @@ export class ParticipantService {
     return this.participantModel.findOne({ _id: id });
   }
 
-  async delete(id: string) {
-    const participantExists = await this.participantModel.findOne({ _id: id });
+  async delete(campaignId: string, influencerId: string) {
+    const participantExists = await this.participantModel.findOne({
+      campaign: campaignId,
+      influencer: influencerId,
+    });
 
     if (!participantExists) {
-      throw new ConflictException("Participante não encontrado");
+      throw new ConflictException("Participante não encontrado na campanha");
     }
 
-    return await this.participantModel.deleteOne({ _id: id });
+    return await this.participantModel.deleteOne({
+      campaign: campaignId,
+      influencer: influencerId,
+    });
   }
 }

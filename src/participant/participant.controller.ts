@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Patch,
   Post,
@@ -85,12 +86,20 @@ export class ParticipantController {
     };
   }
 
-  @Delete(":id")
-  async delete(@Param("id", new ZodValidationPipe(objectIdSchema)) id: string) {
-    const participantDeleted = await this.participantService.delete(id);
+  @Delete(":campaignId/:influencerId")
+  async delete(
+    @Param("campaignId", new ZodValidationPipe(objectIdSchema))
+    campaignId: string,
+    @Param("influencerId", new ZodValidationPipe(objectIdSchema))
+    influencerId: string,
+  ) {
+    const participantDeleted = await this.participantService.delete(
+      campaignId,
+      influencerId,
+    );
 
     return {
-      message: "Participante excluido com sucesso",
+      message: "Participante excluido da campanha com sucesso",
       data: participantDeleted,
     };
   }

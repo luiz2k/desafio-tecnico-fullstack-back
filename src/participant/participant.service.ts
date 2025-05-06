@@ -27,6 +27,20 @@ export class ParticipantService {
     return await this.participantModel.find();
   }
 
+  async findByCampaignId(id: string) {
+    const participantExists = await this.participantModel
+      .find({
+        campaign: id,
+      })
+      .populate("influencer");
+
+    if (!participantExists) {
+      throw new ConflictException("Participante não encontrado");
+    }
+
+    return participantExists;
+  }
+
   async update(id: string, updateParticipantDto: UpdateParticipantDto) {
     const participantExists = await this.participantModel.findOne({ _id: id });
 

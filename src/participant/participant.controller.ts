@@ -55,6 +55,19 @@ export class ParticipantController {
   }
 
   @Roles(UserRole.EDITOR)
+  @Get(":id")
+  async findByCampaignId(
+    @Param("id", new ZodValidationPipe(objectIdSchema)) id: string,
+  ) {
+    const participants = await this.participantService.findByCampaignId(id);
+
+    return {
+      message: "Participantes da campanha encontrados com sucesso",
+      data: participants,
+    };
+  }
+
+  @Roles(UserRole.EDITOR)
   @Patch(":id")
   update(
     @Param("id", new ZodValidationPipe(objectIdSchema)) id: string,

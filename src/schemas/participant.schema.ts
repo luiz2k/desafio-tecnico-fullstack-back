@@ -7,10 +7,10 @@ export type ParticipantDocument = HydratedDocument<Participant>;
 
 @Schema()
 export class Participant {
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "campaign" })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Campaign.name })
   campaign: Campaign;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "influencer" })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Influencer.name })
   influencer: Influencer;
 }
 

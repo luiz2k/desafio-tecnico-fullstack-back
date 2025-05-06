@@ -31,7 +31,7 @@ export class CampaignService {
     }
 
     const createdCampaign = await this.campaignModel.create(
-      createCampaignParticipant,
+      createCampaignParticipant.campaign,
     );
 
     // Remove os influenciadores duplicados

@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from "@nestjs/common";
 import { AuthGuard } from "src/auth/auth.guard";
@@ -20,6 +21,7 @@ import {
   createCampaignParticipantSchema,
 } from "./dto/create-campaign.dto";
 import { UpdateCampaignDto } from "./dto/update-campaign.dto";
+import { CampaignStatus } from "src/schemas/campaign.schema";
 
 @UseGuards(RolesGuard)
 @Roles(UserRole.ADMIN)
@@ -45,8 +47,11 @@ export class CampaignController {
 
   @Get()
   @Roles(UserRole.EDITOR)
-  async findAll() {
-    const campaigns = await this.campaignService.findAll();
+  async findAll(
+    @Query("title") title?: string,
+    @Query("status") status?: CampaignStatus,
+  ) {
+    const campaigns = await this.campaignService.findAll(title, status);
 
     return {
       message: "Busca de campanhas realizada com sucesso",

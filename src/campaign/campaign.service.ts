@@ -5,7 +5,7 @@ import {
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { Campaign } from "src/schemas/campaign.schema";
+import { Campaign, CampaignStatus } from "src/schemas/campaign.schema";
 import { Influencer } from "src/schemas/influencer.schema";
 import { Participant } from "src/schemas/participant.schema";
 import { CreateCampaignParticipantDto } from "./dto/create-campaign.dto";
@@ -58,8 +58,18 @@ export class CampaignService {
     return createdCampaign;
   }
 
-  async findAll() {
-    return await this.campaignModel.find();
+  async findAll(title: string | undefined, status: CampaignStatus | undefined) {
+    const filter = {};
+
+    if (title) {
+      filter["title"] = { $regex: title, $options: "i" };
+    }
+
+    if (status) {
+      filter["status"] = status;
+    }
+
+    return await this.campaignModel.find(filter);
   }
 
   async findOne(id: string) {

@@ -30,6 +30,15 @@ export class CampaignService {
       throw new ConflictException("Já existe uma campanha com esse título");
     }
 
+    if (
+      createCampaignParticipant.campaign.startedAt >
+      createCampaignParticipant.campaign.finishedAt
+    ) {
+      throw new ConflictException(
+        "A data de fim deve ser maior que a data de inicio",
+      );
+    }
+
     const createdCampaign = await this.campaignModel.create(
       createCampaignParticipant.campaign,
     );

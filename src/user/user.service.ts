@@ -2,7 +2,7 @@ import { ConflictException, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import * as bcrypt from "bcrypt";
 import { Model } from "mongoose";
-import { User } from "src/schemas/user.schema";
+import { User, UserRole } from "src/schemas/user.schema";
 import { CreateUserDto } from "./dto/create-user.dto";
 
 @Injectable()
@@ -38,16 +38,18 @@ export class UserService {
       throw new ConflictException("Não é possível excluir a própria conta");
     }
 
-    const adminUsers = await this.userModel.find({ roles: "admin" });
-
-    if (adminUsers.length === 1) {
-      throw new ConflictException("Deve existir pelo menos um admin");
-    }
-
     const userExists = await this.userModel.find({ _id: id });
 
     if (userExists.length === 0) {
       throw new ConflictException("Usuário não encontrado");
+    }
+
+    if (userExists[0].roles.includes(UserRole.ADMIN)) {
+      const adminUsers = await this.userModel.find({ roles: "admin" });
+
+      if (adminUsers.length === 1) {
+        throw new ConflictException("Deve existir pelo menos um admin");
+      }
     }
 
     return await this.userModel.deleteOne({ _id: id });

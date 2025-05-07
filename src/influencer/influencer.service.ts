@@ -30,8 +30,18 @@ export class InfluencerService {
     return await this.influencerModel.create(createInfluencerDto);
   }
 
-  async findAll() {
-    return await this.influencerModel.find();
+  async findAll(name: string | undefined, social_network: string | undefined) {
+    const filter = {};
+
+    if (name) {
+      filter["name"] = { $regex: name, $options: "i" };
+    }
+
+    if (social_network) {
+      filter["social_network"] = { $regex: social_network, $options: "i" };
+    }
+
+    return await this.influencerModel.find(filter);
   }
 
   async update(id: string, updateInfluencerDto: UpdateInfluencerDto) {

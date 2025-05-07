@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from "@nestjs/common";
 import { AuthGuard } from "src/auth/auth.guard";
@@ -47,8 +48,14 @@ export class InfluencerController {
 
   @Roles(UserRole.EDITOR)
   @Get()
-  async findAll() {
-    const influencers = await this.influencerService.findAll();
+  async findAll(
+    @Query("name") name?: string,
+    @Query("social_network") social_network?: string,
+  ) {
+    const influencers = await this.influencerService.findAll(
+      name,
+      social_network,
+    );
 
     return {
       message: "Busca de influenciadores realizada com sucesso",

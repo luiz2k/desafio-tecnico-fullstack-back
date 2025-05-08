@@ -15,6 +15,7 @@ export class ZodValidationPipe implements PipeTransform {
       if (error instanceof ZodError) {
         throw new BadRequestException({
           message: "Erro na validação dos dados",
+          error: "Bad Request",
           data: {
             type: metadata.type,
             errors: error.issues,

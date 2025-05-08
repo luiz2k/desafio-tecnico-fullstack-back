@@ -5,8 +5,8 @@ import {
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { Campaign } from "src/schemas/campaign.schema";
 import { Influencer } from "src/schemas/influencer.schema";
+import { Participant } from "src/schemas/participant.schema";
 import { CreateInfluencerDto } from "./dto/create-influencer.dto";
 import { UpdateInfluencerDto } from "./dto/update-influencer.dto";
 
@@ -15,7 +15,8 @@ export class InfluencerService {
   constructor(
     @InjectModel(Influencer.name)
     private readonly influencerModel: Model<Influencer>,
-    @InjectModel(Campaign.name) private readonly campaignModel: Model<Campaign>,
+    @InjectModel(Participant.name)
+    private readonly participantModel: Model<Participant>,
   ) {}
 
   async create(createInfluencerDto: CreateInfluencerDto) {
@@ -93,10 +94,9 @@ export class InfluencerService {
       throw new NotFoundException("Influenciador não encontrado");
     }
 
-    await this.campaignModel.updateMany(
-      { influencers: id },
-      { $pull: { influencers: id } },
-    );
+    await this.participantModel.deleteMany({
+      influencer: influencerExists._id,
+    });
 
     return await this.influencerModel.deleteOne({ _id: id });
   }

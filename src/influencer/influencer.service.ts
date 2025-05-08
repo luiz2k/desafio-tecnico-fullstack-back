@@ -67,7 +67,7 @@ export class InfluencerService {
       .populate("influencer");
 
     if (!campaignParticipants) {
-      throw new ConflictException("Campanha não encontrada");
+      throw new NotFoundException("Campanha não encontrada");
     }
 
     const influencers = campaignParticipants.map(

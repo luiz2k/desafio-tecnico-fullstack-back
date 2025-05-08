@@ -98,7 +98,43 @@ export class CampaignService {
       throw new NotFoundException("Campanha não encontrada");
     }
 
-    await this.campaignModel.updateOne({ _id: id }, updateCampaignDto);
+    // Verifica quais registros do influenciador devem ser atualizados
+    const updatePayload: UpdateCampaignDto = {};
+
+    for (const key of Object.keys(updateCampaignDto)) {
+      const oldValue = campaignExists[key] as string | number | undefined;
+      const newValue = updateCampaignDto[key] as string | number | undefined;
+
+      if (newValue !== undefined && newValue !== oldValue) {
+        updatePayload[key] = newValue;
+      }
+    }
+
+    if (Object.keys(updatePayload).length === 0) {
+      throw new ConflictException("Pelo menos um campo deve ser atualizado");
+    }
+
+    if (updatePayload.title) {
+      const campaignExists = await this.campaignModel.findOne({
+        title: updatePayload.title,
+      });
+
+      if (campaignExists) {
+        throw new ConflictException("Já existe uma campanha com esse título");
+      }
+    }
+
+    if (
+      updatePayload.startedAt &&
+      updatePayload.finishedAt &&
+      updatePayload.startedAt >= updatePayload.finishedAt
+    ) {
+      throw new ConflictException(
+        "A data de fim deve ser maior que a data de início",
+      );
+    }
+
+    await this.campaignModel.updateOne({ _id: id }, updatePayload);
 
     return await this.campaignModel.findOne({ _id: id });
   }

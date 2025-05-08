@@ -30,7 +30,7 @@ export class InfluencerService {
     return await this.influencerModel.create(createInfluencerDto);
   }
 
-  async findAll(name: string | undefined, social_network: string | undefined) {
+  async findAll(name?: string, social_network?: string) {
     const filter = {};
 
     if (name) {

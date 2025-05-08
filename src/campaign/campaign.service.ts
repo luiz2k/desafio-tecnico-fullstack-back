@@ -67,7 +67,7 @@ export class CampaignService {
     return createdCampaign;
   }
 
-  async findAll(title: string | undefined, status: CampaignStatus | undefined) {
+  async findAll(title?: string, status?: CampaignStatus) {
     const filter = {};
 
     if (title) {

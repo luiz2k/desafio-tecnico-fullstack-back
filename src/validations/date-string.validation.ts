@@ -5,6 +5,9 @@ export const dateStringSchema = z
     required_error: "Data obrigatória",
     invalid_type_error: "A data precisa está no formato string",
   })
+  .refine((val) => val !== "", {
+    message: "Uma data precisa ser informada",
+  })
   .refine((val) => !isNaN(Date.parse(val)), {
     message: "Data inválida",
   })

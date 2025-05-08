@@ -45,6 +45,41 @@ export class InfluencerService {
     return await this.influencerModel.find(filter);
   }
 
+  async findInfluencersUnrelatedToTheCampaign(
+    id: string,
+    name?: string,
+    social_network?: string,
+  ) {
+    const filter = {};
+
+    if (name) {
+      filter["name"] = { $regex: name, $options: "i" };
+    }
+
+    if (social_network) {
+      filter["social_network"] = { $regex: social_network, $options: "i" };
+    }
+
+    const campaignParticipants = await this.participantModel
+      .find({
+        campaign: id,
+      })
+      .populate("influencer");
+
+    if (!campaignParticipants) {
+      throw new ConflictException("Campanha não encontrada");
+    }
+
+    const influencers = campaignParticipants.map(
+      (participant) => participant.influencer,
+    );
+
+    return await this.influencerModel.find({
+      _id: { $nin: influencers },
+      ...filter,
+    });
+  }
+
   async update(id: string, updateInfluencerDto: UpdateInfluencerDto) {
     const influencerExists = await this.influencerModel.findOne({
       _id: id,

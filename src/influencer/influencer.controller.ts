@@ -64,6 +64,26 @@ export class InfluencerController {
   }
 
   @Roles(UserRole.EDITOR)
+  @Get("unrelated-to-campaign/:id")
+  async findInfluencersUnrelatedToTheCampaign(
+    @Param("id", new ZodValidationPipe(objectIdSchema)) id: string,
+    @Query("name") name?: string,
+    @Query("social_network") social_network?: string,
+  ) {
+    const influencers =
+      await this.influencerService.findInfluencersUnrelatedToTheCampaign(
+        id,
+        name,
+        social_network,
+      );
+
+    return {
+      message: "Busca de influenciadores realizada com sucesso",
+      data: influencers,
+    };
+  }
+
+  @Roles(UserRole.EDITOR)
   @Patch(":id")
   async update(
     @Param("id", new ZodValidationPipe(objectIdSchema)) id: string,

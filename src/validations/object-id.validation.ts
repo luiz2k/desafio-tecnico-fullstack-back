@@ -10,3 +10,5 @@ export const objectIdSchema = z
   .refine((id) => mongoose.Types.ObjectId.isValid(id), {
     message: "Informe um id no formato ObjectId do MongoDB",
   });
+
+export type ObjectIdSchema = z.infer<typeof objectIdSchema>;

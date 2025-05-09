@@ -23,6 +23,7 @@ import {
   updateParticipantSchema,
 } from "./dto/update-participant.dto";
 import { ParticipantService } from "./participant.service";
+import { z } from "zod";
 
 @UseGuards(RolesGuard)
 @Roles(UserRole.ADMIN)
@@ -41,6 +42,25 @@ export class ParticipantController {
     return {
       message: "Participante cadastrado com sucesso",
       data: newParticipant,
+    };
+  }
+
+  @Roles(UserRole.ADMIN)
+  @Post("bulk/:campaignId")
+  async createMany(
+    @Param("campaignId", new ZodValidationPipe(objectIdSchema))
+    campaignId: string,
+    @Body(new ZodValidationPipe(z.array(objectIdSchema)))
+    influencers: string[],
+  ) {
+    const newParticipants = await this.participantService.createMany(
+      campaignId,
+      influencers,
+    );
+
+    return {
+      message: "Participantes cadastrados com sucesso",
+      data: newParticipants,
     };
   }
 

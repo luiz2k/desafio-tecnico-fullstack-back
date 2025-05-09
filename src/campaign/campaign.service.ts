@@ -102,8 +102,14 @@ export class CampaignService {
     const updatePayload: UpdateCampaignDto = {};
 
     for (const key of Object.keys(updateCampaignDto)) {
-      const oldValue = campaignExists[key] as string | number | undefined;
-      const newValue = updateCampaignDto[key] as string | number | undefined;
+      let oldValue = campaignExists[key] as string | number | Date;
+      let newValue = updateCampaignDto[key] as string | number | Date;
+
+      // Verifica se é um objeto, pois ele salva no banco de dados como objeto
+      if (typeof oldValue === "object") {
+        oldValue = new Date(oldValue).getTime();
+        newValue = new Date(newValue).getTime();
+      }
 
       if (newValue !== undefined && newValue !== oldValue) {
         updatePayload[key] = newValue;

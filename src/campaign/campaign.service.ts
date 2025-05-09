@@ -31,7 +31,7 @@ export class CampaignService {
     }
 
     if (
-      createCampaignParticipant.campaign.startedAt >
+      createCampaignParticipant.campaign.startedAt >=
       createCampaignParticipant.campaign.finishedAt
     ) {
       throw new ConflictException(

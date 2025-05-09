@@ -45,7 +45,6 @@ export class ParticipantController {
     };
   }
 
-  @Roles(UserRole.ADMIN)
   @Post("bulk/:campaignId")
   async createMany(
     @Param("campaignId", new ZodValidationPipe(objectIdSchema))

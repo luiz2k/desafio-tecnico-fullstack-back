@@ -72,6 +72,7 @@ export class CampaignController {
     };
   }
 
+  @Roles(UserRole.EDITOR)
   @Patch(":id")
   async update(
     @Param("id", new ZodValidationPipe(objectIdSchema)) id: string,

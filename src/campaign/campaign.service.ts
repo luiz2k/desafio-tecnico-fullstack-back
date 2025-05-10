@@ -130,13 +130,29 @@ export class CampaignService {
       }
     }
 
+    if (updatePayload.startedAt && !updatePayload.finishedAt) {
+      if (updatePayload.startedAt >= campaignExists.finishedAt) {
+        throw new ConflictException(
+          "A data de início deve ser menor que a data de fim",
+        );
+      }
+    }
+
+    if (updatePayload.finishedAt && !updatePayload.startedAt) {
+      if (updatePayload.finishedAt <= campaignExists.startedAt) {
+        throw new ConflictException(
+          "A data de fim deve ser maior que a data de inicio",
+        );
+      }
+    }
+
     if (
       updatePayload.startedAt &&
       updatePayload.finishedAt &&
       updatePayload.startedAt >= updatePayload.finishedAt
     ) {
       throw new ConflictException(
-        "A data de fim deve ser maior que a data de início",
+        "A data de fim deve ser maior que a data de inicio",
       );
     }
 

@@ -6,13 +6,19 @@ export const createInfluencerSchema = z.object({
       required_error: "Nome obrigatório",
       invalid_type_error: "O nome precisa ser uma string",
     })
-    .min(3, { message: "Nome muito curto, mínimo 3 caracteres" }),
+    .min(3, { message: "Nome muito curto, mínimo 3 caracteres" })
+    .max(64, {
+      message: "Nome muito longo, máximo 64 caracteres",
+    }),
   social_network: z
     .string({
       required_error: "Rede social obrigatória",
       invalid_type_error: "A rede social precisa ser uma string",
     })
     .min(3, { message: "Rede social muito curta, mínimo 3 caracteres" })
+    .max(64, {
+      message: "Rede social muito longa, máximo 64 caracteres",
+    })
     .regex(
       /^[a-zA-Z0-9_.]+$/,
       "A rede social pode conter apenas letras, números, pontos e underlines — sem espaços ou caracteres especiais.",
